@@ -69,6 +69,9 @@ export const Controls = ({
           <span className="hidden md:inline-block text-[11px] text-slate-400 font-medium">
             (Use ← → ou Espaço)
           </span>
+          <span className="inline-block md:hidden text-[10px] text-slate-400 font-medium">
+            ← deslize →
+          </span>
         </div>
 
         {/* Right Side: Navigation Buttons */}
@@ -78,7 +81,7 @@ export const Controls = ({
             whileTap={!isFirst ? { scale: 0.95 } : {}}
             disabled={isFirst}
             onClick={onPrev}
-            className={`px-4 py-2 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all shadow-sm ${
+            className={`px-3 sm:px-4 py-2.5 sm:py-2 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all shadow-sm min-h-[44px] sm:min-h-0 ${
               isFirst
                 ? 'bg-slate-100 text-slate-400 cursor-not-allowed opacity-60'
                 : 'bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 shadow-sm'
@@ -93,7 +96,7 @@ export const Controls = ({
             whileTap={!isLast ? { scale: 0.95 } : {}}
             disabled={isLast}
             onClick={onNext}
-            className={`px-5 py-2 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all shadow-md ${
+            className={`px-4 sm:px-5 py-2.5 sm:py-2 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all shadow-md min-h-[44px] sm:min-h-0 ${
               isLast
                 ? 'bg-slate-100 text-slate-400 cursor-not-allowed opacity-60'
                 : 'bg-gradient-to-r from-clinical-600 to-teal-600 hover:from-clinical-700 hover:to-teal-700 text-white shadow-clinical'

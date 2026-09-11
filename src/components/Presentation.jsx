@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { slidesData } from '../data/slidesData';
 import Slide from './Slide';
@@ -38,6 +38,10 @@ export const Presentation = () => {
   const [isGridOpen, setIsGridOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
+  // Touch swipe state
+  const touchStartX = useRef(null);
+  const touchStartY = useRef(null);
+
   const totalSlides = slidesData.length;
   const currentSlide = slidesData[currentIndex];
 
@@ -71,6 +75,28 @@ export const Presentation = () => {
       }
     }
   };
+
+  // Touch swipe handlers
+  const handleTouchStart = useCallback((e) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  }, []);
+
+  const handleTouchEnd = useCallback((e) => {
+    if (touchStartX.current === null) return;
+    const deltaX = touchStartX.current - e.changedTouches[0].clientX;
+    const deltaY = touchStartY.current - e.changedTouches[0].clientY;
+    // Only trigger if horizontal swipe is dominant (not a scroll)
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 40) {
+      if (deltaX > 0) {
+        handleNext(); // swipe left → próximo
+      } else {
+        handlePrev(); // swipe right → anterior
+      }
+    }
+    touchStartX.current = null;
+    touchStartY.current = null;
+  }, [handleNext, handlePrev]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -112,7 +138,11 @@ export const Presentation = () => {
       <Header currentSlide={currentSlide} totalSlides={totalSlides} />
 
       {/* Main Slide Deck Canvas */}
-      <main className="flex-1 relative overflow-hidden flex items-center justify-center p-3 sm:p-6">
+      <main
+        className="flex-1 relative overflow-hidden flex items-center justify-center p-2 sm:p-6"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         <div className="w-full h-full max-w-6xl max-h-[860px] bg-white/95 backdrop-blur-xl rounded-3xl shadow-elevated border border-slate-200/90 relative overflow-hidden flex flex-col">
           {/* Subtle Ambient Background Accents */}
           <div className="absolute top-0 right-0 w-96 h-96 bg-clinical-100/40 rounded-full blur-3xl pointer-events-none -z-0 translate-x-1/2 -translate-y-1/2" />
